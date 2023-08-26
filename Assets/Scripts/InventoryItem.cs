@@ -9,9 +9,18 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 {
     [Header("UI")]
-    public Image image;
     [HideInInspector] public Item item;
     [HideInInspector] public Transform parentAfterDrag;
+    public Image image;
+    public GameObject inputManager1;
+    private InputManager inputManager;
+    
+    private void Awake()
+    {
+        inputManager1 = GameObject.Find("InputManager");
+        inputManager = inputManager1.GetComponent<InputManager>();
+    }
+
 
     public void InitialiseItem(Item newItem)
     {
@@ -25,6 +34,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         image.raycastTarget = false;
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.root);
+        inputManager.ChangeSelectSlot(inputManager.GetEventSystemRaycastResults());
     }
     public void OnDrag(PointerEventData eventData)
     {
@@ -34,6 +44,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         image.raycastTarget = true;
         transform.SetParent(parentAfterDrag);
+        inputManager.ChangeSelectSlot(inputManager.GetEventSystemRaycastResults());
     }
 
     public static implicit operator InventoryItem(Item v)

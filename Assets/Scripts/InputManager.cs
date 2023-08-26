@@ -1,36 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Unity.VisualScripting;
+using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour
 {
     public InventoryManager inventoryManager;
-    void Awake()
-    {
-    }
+    public GameObject toolbar;
+    Vector2 OpenedMenuPosition = new(1800, 540);
+    Vector2 ClosedMenuPosition = new(2040, 540);
+    public float speed;
     void Update()
     {
 
+        //Debug.Log(IsPointerOverUIElement(GetEventSystemRaycastResults()));
+        float step = speed * Time.deltaTime;
+        if (IsPointerOverUIElement(GetEventSystemRaycastResults()) == true)
+        {
+            toolbar.transform.position = Vector2.MoveTowards(toolbar.transform.position, OpenedMenuPosition, step);
+        }
+        else
+        {
+            toolbar.transform.position = Vector2.MoveTowards(toolbar.transform.position, ClosedMenuPosition, step);
+        }
 
+        //LeftClick
         if (Input.GetMouseButtonDown(0))
         {
-            string clickedObject = ObjectDetection();
             Item selectedItem = inventoryManager.GetSelectedItem(false);
             if (selectedItem != null)
             {
+                string objectName = ObjectDetection();
                 string ItemName = selectedItem.name;
-                Debug.Log(clickedObject + ItemName);
-                if (ItemName == "Torch" && clickedObject == "Fire")
+                //Debug.Log(objectName + ItemName);
+                if (ItemName == "Torch" && objectName == "Fire")
                 {
                     inventoryManager.ReplaceItem("FireTorch");
-
-
                 }
             }
-
-
-
         }
     }
     public string ObjectDetection()
@@ -46,6 +59,44 @@ public class InputManager : MonoBehaviour
         }
         return null;
 
+    }
+    ///Returns 'true' if we touched or hovering on Unity UI element.
+    public static bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+    {
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+
+            if (curRaysastResult.gameObject.layer == LayerMask.NameToLayer("UI"))
+                return true;
+        }
+
+        return false;
+    }
+    ///Gets all event systen raycast results of current mouse or touch position.
+    public List<RaycastResult> GetEventSystemRaycastResults()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raycastResults);
+        //foreach (var eventData2 in raycastResults) { Debug.Log(eventData2.ToString()); }
+        return raycastResults;
+    }
+
+    public void ChangeSelectSlot(List<RaycastResult> raycastResults)
+    {
+        foreach (var eventData in raycastResults)
+        {
+            string objectString = eventData.ToString();
+            if (objectString.Contains("InventorySlot") == true)
+            {
+                int index = int.Parse(Regex.Match(objectString, @"\d+").Value);
+                Debug.Log(index);
+                inventoryManager.ChangeSelectSlot(index);
+            }
+        }
     }
 }
 
