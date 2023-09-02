@@ -8,6 +8,8 @@ public class InventoryManager : MonoBehaviour
     public InventorySlot[] inventorySlots;
     public Item[] itemToPickUp;
     public GameObject InventoryItemPrefab;
+    GameObject IdeaBubble;
+
 
     int selectedSlot = -1;
 
@@ -77,6 +79,19 @@ public class InventoryManager : MonoBehaviour
                 SpawnNewItem(replaceItem, slot);
             }
 
+        }
+    }
+
+
+    public void CallBubble(string itemName)
+    {
+        foreach (Item obj in itemToPickUp)
+        {
+            if (obj.name == itemName)
+            {
+                GameObject bubble = Instantiate(IdeaBubble, transform);
+                bubble.GetComponent<SpriteRenderer>().sprite = obj.image;
+            }
         }
     }
 }

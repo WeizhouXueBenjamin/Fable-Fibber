@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.Unity.VisualStudio.Editor;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -13,9 +14,19 @@ public class InputManager : MonoBehaviour
 {
     public InventoryManager inventoryManager;
     public GameObject toolbar;
-    Vector2 OpenedMenuPosition = new(1800, 540);
-    Vector2 ClosedMenuPosition = new(2040, 540);
+    Vector2 tarPos;
+    Vector2 orgPos;
+    float width;
     public float speed;
+    RectTransform rt;
+
+    private void Awake()
+    {
+        rt = toolbar.GetComponent<RectTransform>();
+        orgPos = rt.transform.position;
+        width = rt.rect.width;
+        tarPos = new(orgPos.x - width, orgPos.y);
+    }
     void Update()
     {
 
@@ -23,11 +34,11 @@ public class InputManager : MonoBehaviour
         float step = speed * Time.deltaTime;
         if (IsPointerOverUIElement(GetEventSystemRaycastResults()) == true)
         {
-            toolbar.transform.position = Vector2.MoveTowards(toolbar.transform.position, OpenedMenuPosition, step);
+            toolbar.transform.position = Vector2.MoveTowards(toolbar.transform.position, tarPos, step);
         }
         else
         {
-            toolbar.transform.position = Vector2.MoveTowards(toolbar.transform.position, ClosedMenuPosition, step);
+            toolbar.transform.position = Vector2.MoveTowards(toolbar.transform.position, orgPos, step);
         }
 
         //LeftClick
@@ -38,10 +49,15 @@ public class InputManager : MonoBehaviour
             {
                 string objectName = ObjectDetection();
                 string ItemName = selectedItem.name;
-                //Debug.Log(objectName + ItemName);
+                Debug.Log(objectName + ItemName);
                 if (ItemName == "Torch" && objectName == "Fire")
                 {
                     inventoryManager.ReplaceItem("FireTorch");
+                }
+                if (objectName == "Man")
+                {
+                    Debug.Log("1");
+                    inventoryManager.CallBubble("Torch");
                 }
             }
         }
