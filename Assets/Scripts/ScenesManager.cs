@@ -6,9 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class ScenesManager : MonoBehaviour
 {
-    public Camera mainCamera;
-    public float distanceFromCamera = 10f;
-    
     public void ChangeScene(int index)
     {
         int sceneCount = SceneManager.sceneCount;
