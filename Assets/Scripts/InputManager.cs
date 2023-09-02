@@ -16,16 +16,41 @@ public class InputManager : MonoBehaviour
     public GameObject toolbar;
     Vector2 tarPos;
     Vector2 orgPos;
-    float width;
+    float rtWidth;
     public float speed;
     RectTransform rt;
+    public Camera mainCamera;
+    public float distanceFromCamera = 10f;
+    private Vector3 rightEdge;
 
     private void Awake()
     {
         rt = toolbar.GetComponent<RectTransform>();
-        orgPos = rt.transform.position;
-        width = rt.rect.width;
-        tarPos = new(orgPos.x - width, orgPos.y);
+        rtWidth = rt.rect.width;
+
+
+        if (mainCamera == null)
+        {
+            // If the main camera is not assigned, find it by tag
+            mainCamera = Camera.main;
+        }
+
+        if (mainCamera != null)
+        {
+            // Calculate the position at the edge of the camera's view
+            Vector3 edgePosition = CalculateRightEdgePosition2D(mainCamera);
+
+            // Set the object's position
+            transform.position = edgePosition;
+        }
+        else
+        {
+            Debug.LogError("Main camera not found. Please assign the main camera to the script.");
+        }
+        rightEdge = CalculateRightEdgePosition2D(mainCamera);
+
+        orgPos = new Vector2(rightEdge.x, rightEdge.y);
+        tarPos = new Vector2(orgPos.x - rtWidth, orgPos.y);
     }
     void Update()
     {
@@ -113,6 +138,18 @@ public class InputManager : MonoBehaviour
                 inventoryManager.ChangeSelectSlot(index);
             }
         }
+    }
+
+    private Vector3 CalculateRightEdgePosition2D(Camera camera)
+    {
+        float cameraHeight = 2f * camera.orthographicSize; // Height of the camera's view
+        float cameraWidth = cameraHeight * camera.aspect;  // Width of the camera's view
+
+        // Calculate the position at the edge of the camera's view
+        Vector3 edgePosition = camera.transform.position + new Vector3(cameraWidth / 2f, 0f, 0f);
+        edgePosition.z = 0f; // Ensure the object is at the same Z position as the camera
+
+        return edgePosition;
     }
 }
 

@@ -2220,6 +2220,8 @@ MonoBehaviour:
   inventoryManager: {fileID: 1128541610}
   toolbar: {fileID: 1479352528}
   speed: 1500
+  mainCamera: {fileID: 0}
+  distanceFromCamera: 10
 --- !u!4 &1320405122
 Transform:
   m_ObjectHideFlags: 0
@@ -2545,7 +2547,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 120, y: 0}
+  m_AnchoredPosition: {x: 123, y: 0}
   m_SizeDelta: {x: 240, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1479352530
