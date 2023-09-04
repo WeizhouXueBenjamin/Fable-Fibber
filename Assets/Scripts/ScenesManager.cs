@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class ScenesManager : MonoBehaviour
 {
+
     public void ChangeScene(int index)
     {
         int sceneCount = SceneManager.sceneCount;
@@ -20,8 +21,6 @@ public class ScenesManager : MonoBehaviour
         }
 
         SceneManager.LoadScene(index, LoadSceneMode.Additive);
-
-
     }
 
     public void EnterGame()
