@@ -1009,6 +1009,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f69b0ab8359b1ab4f87a92f089507ce4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  distanceFromCamera: 10
+  rightEdge: {x: 0, y: 0, z: 0}
 --- !u!4 &567073779
 Transform:
   m_ObjectHideFlags: 0
@@ -2220,8 +2223,7 @@ MonoBehaviour:
   inventoryManager: {fileID: 1128541610}
   toolbar: {fileID: 1479352528}
   speed: 1500
-  mainCamera: {fileID: 0}
-  distanceFromCamera: 10
+  sm: {fileID: 567073778}
 --- !u!4 &1320405122
 Transform:
   m_ObjectHideFlags: 0

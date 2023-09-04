@@ -19,51 +19,41 @@ public class InputManager : MonoBehaviour
     float rtWidth;
     public float speed;
     RectTransform rt;
-    public Camera mainCamera;
-    public float distanceFromCamera = 10f;
-    private Vector3 rightEdge;
 
     private void Awake()
     {
+        int screenWidth = Screen.width;
+        int screenHeight = Screen.height;
+        float ratio = screenWidth / 1920f;
+
         rt = toolbar.GetComponent<RectTransform>();
         rtWidth = rt.rect.width;
 
+        Debug.Log("Screen: " + screenWidth + " x " + screenHeight + " Toolbar: " + rtWidth);
 
-        if (mainCamera == null)
-        {
-            // If the main camera is not assigned, find it by tag
-            mainCamera = Camera.main;
-        }
-
-        if (mainCamera != null)
-        {
-            // Calculate the position at the edge of the camera's view
-            Vector3 edgePosition = CalculateRightEdgePosition2D(mainCamera);
-
-            // Set the object's position
-            transform.position = edgePosition;
-        }
-        else
-        {
-            Debug.LogError("Main camera not found. Please assign the main camera to the script.");
-        }
-        rightEdge = CalculateRightEdgePosition2D(mainCamera);
-
-        orgPos = new Vector2(rightEdge.x, rightEdge.y);
-        tarPos = new Vector2(orgPos.x - rtWidth, orgPos.y);
+        orgPos = new Vector2(screenWidth + rtWidth * ratio / 2, screenHeight / 2);
+        tarPos = new Vector2(orgPos.x - rtWidth * ratio, orgPos.y);
     }
+
     void Update()
     {
-
         //Debug.Log(IsPointerOverUIElement(GetEventSystemRaycastResults()));
         float step = speed * Time.deltaTime;
         if (IsPointerOverUIElement(GetEventSystemRaycastResults()) == true)
         {
-            toolbar.transform.position = Vector2.MoveTowards(toolbar.transform.position, tarPos, step);
+            toolbar.transform.position = Vector2.MoveTowards(
+                toolbar.transform.position,
+                tarPos,
+                step
+            );
         }
         else
         {
-            toolbar.transform.position = Vector2.MoveTowards(toolbar.transform.position, orgPos, step);
+            toolbar.transform.position = Vector2.MoveTowards(
+                toolbar.transform.position,
+                orgPos,
+                step
+            );
         }
 
         //LeftClick
@@ -87,6 +77,7 @@ public class InputManager : MonoBehaviour
             }
         }
     }
+
     public string ObjectDetection()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -99,8 +90,8 @@ public class InputManager : MonoBehaviour
             return clickedObject;
         }
         return null;
-
     }
+
     ///Returns 'true' if we touched or hovering on Unity UI element.
     public static bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
     {
@@ -114,6 +105,7 @@ public class InputManager : MonoBehaviour
 
         return false;
     }
+
     ///Gets all event systen raycast results of current mouse or touch position.
     public List<RaycastResult> GetEventSystemRaycastResults()
     {
@@ -140,18 +132,15 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private Vector3 CalculateRightEdgePosition2D(Camera camera)
-    {
-        float cameraHeight = 2f * camera.orthographicSize; // Height of the camera's view
-        float cameraWidth = cameraHeight * camera.aspect;  // Width of the camera's view
+    // private Vector3 CalculateRightEdgePosition2D(Camera camera)
+    // {
+    //     float cameraHeight = 2f * camera.orthographicSize; // Height of the camera's view
+    //     float cameraWidth = cameraHeight * camera.aspect;  // Width of the camera's view
 
-        // Calculate the position at the edge of the camera's view
-        Vector3 edgePosition = camera.transform.position + new Vector3(cameraWidth / 2f, 0f, 0f);
-        edgePosition.z = 0f; // Ensure the object is at the same Z position as the camera
+    //     // Calculate the position at the edge of the camera's view
+    //     Vector3 edgePosition = camera.transform.position + new Vector3(cameraWidth / 2f, 0f, 0f);
+    //     edgePosition.z = 0f; // Ensure the object is at the same Z position as the camera
 
-        return edgePosition;
-    }
+    //     return edgePosition;
+    // }
 }
-
-
-
