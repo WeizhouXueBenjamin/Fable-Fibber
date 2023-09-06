@@ -12,13 +12,14 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     [HideInInspector] public Item item;
     [HideInInspector] public Transform parentAfterDrag;
     public Image image;
-    public GameObject inputManager1;
     private InputManager inputManager;
-    
-    private void Awake()
+    private InventoryManager inventoryManager;
+    Item selectedItem;
+
+    private void Start()
     {
-        inputManager1 = GameObject.Find("InputManager");
-        inputManager = inputManager1.GetComponent<InputManager>();
+        inputManager = GameObject.Find("InputManager").GetComponent<InputManager>();
+        inventoryManager = GameObject.Find("InventoryManager").GetComponent<InventoryManager>();
     }
 
 
@@ -31,6 +32,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        selectedItem = inventoryManager.GetSelectedItem(false);
         image.raycastTarget = false;
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.root);
@@ -42,13 +44,59 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
     public void OnEndDrag(PointerEventData eventData)
     {
-        image.raycastTarget = true;
-        transform.SetParent(parentAfterDrag);
-        inputManager.ChangeSelectSlot(inputManager.GetEventSystemRaycastResults());
+        if (IsPointerOverUIElement(inputManager.GetEventSystemRaycastResults()) == true)
+        {
+            image.raycastTarget = true;
+            transform.SetParent(parentAfterDrag);
+            inputManager.ChangeSelectSlot(inputManager.GetEventSystemRaycastResults());
+        }
+        else
+        {
+            inputManager.CheckItem(selectedItem);
+            Destroy(gameObject);
+        }
     }
 
     public static implicit operator InventoryItem(Item v)
     {
         throw new NotImplementedException();
     }
+
+    public static bool IsPointerOverUIElement(List<RaycastResult> RaycastResults)
+    {
+        foreach (RaycastResult result in RaycastResults)
+        {
+            if (result.gameObject.layer == LayerMask.NameToLayer("UI"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /* public void CheckItem()
+    {
+        if (inputManager.ObjectDetection() != null && selectedItem != null)
+        {
+            string objectName = inputManager.ObjectDetection().name;
+            string ItemName = selectedItem.name;
+            //Replace Item
+            if (ItemName == "Torch" && objectName == "Fire")
+            {
+                inventoryManager.ReplaceItem("FireTorch");
+                Destroy(gameObject);
+            }
+            //Use Item
+            if (ItemName == "FireTorch" && objectName == "Man")
+            {
+                inventoryManager.GetSelectedItem(true);
+            }
+            //Check Bubble
+            else if (objectName == "Man")
+            {
+                StartCoroutine(inventoryManager.CallBubble("FireTorch", inputManager.ObjectDetection().transform));
+            }
+
+        } */
 }
+

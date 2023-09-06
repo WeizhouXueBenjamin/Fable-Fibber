@@ -19,6 +19,7 @@ public class InputManager : MonoBehaviour
     float width;
     public float speed;
     RectTransform rt;
+    string objectName;
 
     private void Awake()
     {
@@ -42,27 +43,15 @@ public class InputManager : MonoBehaviour
         }
 
         //LeftClick
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && ObjectDetection() != null)
         {
+            objectName = ObjectDetection().name;
+            Debug.Log(objectName);
             Item selectedItem = inventoryManager.GetSelectedItem(false);
-            if (selectedItem != null)
-            {
-                string objectName = ObjectDetection();
-                string ItemName = selectedItem.name;
-                Debug.Log(objectName + ItemName);
-                if (ItemName == "Torch" && objectName == "Fire")
-                {
-                    inventoryManager.ReplaceItem("FireTorch");
-                }
-                if (objectName == "Man")
-                {
-                    Debug.Log("1");
-                    inventoryManager.CallBubble("Torch");
-                }
-            }
+            CheckItem(selectedItem);
         }
     }
-    public string ObjectDetection()
+    public GameObject ObjectDetection()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
@@ -70,23 +59,22 @@ public class InputManager : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
         if (hit.collider != null)
         {
-            string clickedObject = hit.collider.gameObject.name;
+            GameObject clickedObject = hit.collider.gameObject;
             return clickedObject;
         }
         return null;
 
     }
     ///Returns 'true' if we touched or hovering on Unity UI element.
-    public static bool IsPointerOverUIElement(List<RaycastResult> eventSystemRaysastResults)
+    public static bool IsPointerOverUIElement(List<RaycastResult> RaycastResults)
     {
-        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        foreach (RaycastResult result in RaycastResults)
         {
-            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
-
-            if (curRaysastResult.gameObject.layer == LayerMask.NameToLayer("UI"))
+            if (result.gameObject.layer == LayerMask.NameToLayer("UI"))
+            {
                 return true;
+            }
         }
-
         return false;
     }
     ///Gets all event systen raycast results of current mouse or touch position.
@@ -109,10 +97,34 @@ public class InputManager : MonoBehaviour
             if (objectString.Contains("InventorySlot") == true)
             {
                 int index = int.Parse(Regex.Match(objectString, @"\d+").Value);
-                Debug.Log(index);
                 inventoryManager.ChangeSelectSlot(index);
             }
         }
+    }
+    public void CheckItem(Item selectedItem)
+    {
+        
+        if (ObjectDetection() != null && selectedItem != null)
+        {
+            objectName = ObjectDetection().name;
+            string ItemName = selectedItem.name;
+            //Replace Item
+            if (ItemName == "Torch" && objectName == "Fire")
+            {
+                inventoryManager.ReplaceItem("FireTorch");
+            }
+            //Use Item
+            if (ItemName == "FireTorch" && objectName == "Man")
+            {
+                inventoryManager.GetSelectedItem(true);
+            }
+            //Check Bubble
+            else if (objectName == "Man")
+            {
+                StartCoroutine(inventoryManager.CallBubble("FireTorch", ObjectDetection().transform));
+            }
+        }
+
     }
 }
 
