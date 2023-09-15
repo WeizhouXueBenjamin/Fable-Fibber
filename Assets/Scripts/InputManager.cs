@@ -9,10 +9,12 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class InputManager : MonoBehaviour
 {
-    public InventoryManager inventoryManager;
+    [SerializeField] private InventoryManager inventoryManager;
+    [SerializeField] private ScenesManager scenesManager;
     public GameObject toolbar;
     Vector2 tarPos;
     Vector2 orgPos;
@@ -20,6 +22,9 @@ public class InputManager : MonoBehaviour
     public float speed;
     RectTransform rt;
     string objectName;
+    public Button backButton;
+    public int BoyLyingtime = 0;
+
 
     private void Awake()
     {
@@ -103,26 +108,45 @@ public class InputManager : MonoBehaviour
     }
     public void CheckItem(Item selectedItem)
     {
-        
-        if (ObjectDetection() != null && selectedItem != null)
+        if (ObjectDetection() != null)
         {
             objectName = ObjectDetection().name;
-            string ItemName = selectedItem.name;
-            //Replace Item
-            if (ItemName == "Torch" && objectName == "Fire")
-            {
-                inventoryManager.ReplaceItem("FireTorch");
-            }
-            //Use Item
-            if (ItemName == "FireTorch" && objectName == "Man")
-            {
-                inventoryManager.GetSelectedItem(true);
+            //BoyLyingRoute
+            if(objectName == "Boy"){
+                BoyLyingtime++;
+                Debug.Log(BoyLyingtime);
             }
             //Check Bubble
-            else if (objectName == "Man")
+            if (objectName == "Boy")
             {
                 StartCoroutine(inventoryManager.CallBubble("FireTorch", ObjectDetection().transform));
             }
+            //Check scene entrance
+            if (objectName == "MarketEntrance")
+            {
+                scenesManager.GoUp(true);
+                backButton.gameObject.SetActive(true);
+            }
+            if (objectName == "HomeEntrance")
+            {
+                scenesManager.GoRight(true);
+            }
+            if (selectedItem != null)
+            {
+                string ItemName = selectedItem.name;
+                //Replace Item
+                if (ItemName == "Torch" && objectName == "Fire")
+                {
+                    inventoryManager.ReplaceItem("FireTorch");
+                }
+                //Use Item
+                if (ItemName == "FireTorch" && objectName == "Man")
+                {
+                    inventoryManager.GetSelectedItem(true);
+                }
+            }
+
+
         }
 
     }

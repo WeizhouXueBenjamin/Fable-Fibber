@@ -10,8 +10,10 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 {
     [Header("UI")]
     [HideInInspector] public Item item;
+    [HideInInspector] public int count = 1;
     [HideInInspector] public Transform parentAfterDrag;
     public Image image;
+    public Text countText;
     private InputManager inputManager;
     private InventoryManager inventoryManager;
     Item selectedItem;
@@ -27,8 +29,14 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         item = newItem;
         image.sprite = newItem.image;
+        RefreshCount();
     }
 
+    public void RefreshCount(){
+        countText.text = count.ToString();
+        bool textActive = count >1;
+        countText.gameObject.SetActive(textActive);
+    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -44,17 +52,10 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     }
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (IsPointerOverUIElement(inputManager.GetEventSystemRaycastResults()) == true)
-        {
-            image.raycastTarget = true;
-            transform.SetParent(parentAfterDrag);
-            inputManager.ChangeSelectSlot(inputManager.GetEventSystemRaycastResults());
-        }
-        else
-        {
-            inputManager.CheckItem(selectedItem);
-            Destroy(gameObject);
-        }
+        image.raycastTarget = true;
+        transform.SetParent(parentAfterDrag);
+        inputManager.ChangeSelectSlot(inputManager.GetEventSystemRaycastResults());
+        inputManager.CheckItem(selectedItem);
     }
 
     public static implicit operator InventoryItem(Item v)
@@ -74,7 +75,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         return false;
     }
 
-    /* public void CheckItem()
+    public void CheckItem()
     {
         if (inputManager.ObjectDetection() != null && selectedItem != null)
         {
@@ -97,6 +98,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
                 StartCoroutine(inventoryManager.CallBubble("FireTorch", inputManager.ObjectDetection().transform));
             }
 
-        } */
+        }
+    }
 }
 
