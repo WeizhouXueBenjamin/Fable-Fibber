@@ -8,6 +8,55 @@ using UnityEngine.UI;
 
 public class ScenesManager : MonoBehaviour
 {
+    public Transform backgrounds;
+    
+    public void Awake()
+    {
+
+    }
+
+    public void EnterGame() { SceneManager.LoadScene(1); }
+
+    public void RightScene()
+    {
+        if (backgrounds.GetChild(0).gameObject.activeSelf == true)
+        {
+            Debug.Log("Go to town.");
+            backgrounds.GetChild(0).gameObject.SetActive(false);
+            backgrounds.GetChild(1).gameObject.SetActive(true);
+            
+        }
+        else if (backgrounds.GetChild(1).gameObject.activeSelf == true)
+        {
+            Debug.Log("Go to market.");
+            backgrounds.GetChild(1).gameObject.SetActive(false);
+            backgrounds.GetChild(2).gameObject.SetActive(true);
+        }
+        else if (backgrounds.GetChild(2).gameObject.activeSelf == true)
+        {
+            Debug.Log("Go to home.");
+            backgrounds.GetChild(2).gameObject.SetActive(false);
+            backgrounds.GetChild(3).gameObject.SetActive(true);
+        }
+        else if (backgrounds.GetChild(3).gameObject.activeSelf == true)
+        {
+            Debug.Log("Go to woods.");
+            backgrounds.GetChild(3).gameObject.SetActive(false);
+            backgrounds.GetChild(4).gameObject.SetActive(true);
+        }
+        else if (backgrounds.GetChild(4).gameObject.activeSelf == true)
+        {
+            Debug.Log("Go to field.");
+            backgrounds.GetChild(4).gameObject.SetActive(false);
+            backgrounds.GetChild(0).gameObject.SetActive(true);
+        }
+    }
+
+
+
+
+
+
     public new Camera camera;
     public Button backButton;
     public void GoRight(bool right)
@@ -51,8 +100,4 @@ public class ScenesManager : MonoBehaviour
 
     SceneManager.LoadScene(index, LoadSceneMode.Additive); */
 
-    public void EnterGame()
-    {
-        SceneManager.LoadScene(1);
-    }
 }
