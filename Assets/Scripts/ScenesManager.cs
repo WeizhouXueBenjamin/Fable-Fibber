@@ -53,7 +53,6 @@ public class ScenesManager : MonoBehaviour
 
     public void EnterGame()
     {
-        SceneManager.LoadScene(0);
-        SceneManager.LoadScene(2, LoadSceneMode.Additive);
+        SceneManager.LoadScene(1);
     }
 }
