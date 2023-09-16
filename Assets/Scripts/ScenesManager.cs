@@ -11,8 +11,32 @@ public class ScenesManager : MonoBehaviour
     public Camera mainCamera;
     public GameObject boy;
     
-    
+    public string currentScene;
+
     public void EnterGame() { SceneManager.LoadScene(1); }
+
+    public void Update() 
+    {
+        //Debug.Log(currentScene);
+        switch(mainCamera.transform.position.x)
+        {
+            case 0:
+                currentScene = "field";
+                break;
+            case 100:
+                currentScene = "town";
+                break;
+            case 200:
+                currentScene = "market";
+                break;
+            case 300:
+                currentScene = "home";
+                break;
+            case 400:
+                currentScene = "woods";
+                break;
+        }
+    }
 
     public void RightScene()
     {
@@ -41,10 +65,6 @@ public class ScenesManager : MonoBehaviour
             boy.transform.position = boy.transform.position - new Vector3(100, 0, 0);
         }
     }
-
-
-
-
 
     public new Camera camera;
     public Button backButton;
