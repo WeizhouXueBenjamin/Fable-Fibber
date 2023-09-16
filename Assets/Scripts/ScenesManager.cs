@@ -8,50 +8,39 @@ using UnityEngine.UI;
 
 public class ScenesManager : MonoBehaviour
 {
-    public Transform backgrounds;
+    public Camera mainCamera;
+    public GameObject boy;
     
-    public void Awake()
-    {
-
-    }
-
+    
     public void EnterGame() { SceneManager.LoadScene(1); }
 
     public void RightScene()
     {
-        if (backgrounds.GetChild(0).gameObject.activeSelf == true)
+        if (mainCamera.transform.position.x < 400)
         {
-            Debug.Log("Go to town.");
-            backgrounds.GetChild(0).gameObject.SetActive(false);
-            backgrounds.GetChild(1).gameObject.SetActive(true);
-            
+            mainCamera.transform.position = mainCamera.transform.position + new Vector3(100, 0, 0);
+            boy.transform.position = boy.transform.position + new Vector3(100, 0, 0);
         }
-        else if (backgrounds.GetChild(1).gameObject.activeSelf == true)
+        else if (mainCamera.transform.position.x >= 400)
         {
-            Debug.Log("Go to market.");
-            backgrounds.GetChild(1).gameObject.SetActive(false);
-            backgrounds.GetChild(2).gameObject.SetActive(true);
-        }
-        else if (backgrounds.GetChild(2).gameObject.activeSelf == true)
-        {
-            Debug.Log("Go to home.");
-            backgrounds.GetChild(2).gameObject.SetActive(false);
-            backgrounds.GetChild(3).gameObject.SetActive(true);
-        }
-        else if (backgrounds.GetChild(3).gameObject.activeSelf == true)
-        {
-            Debug.Log("Go to woods.");
-            backgrounds.GetChild(3).gameObject.SetActive(false);
-            backgrounds.GetChild(4).gameObject.SetActive(true);
-        }
-        else if (backgrounds.GetChild(4).gameObject.activeSelf == true)
-        {
-            Debug.Log("Go to field.");
-            backgrounds.GetChild(4).gameObject.SetActive(false);
-            backgrounds.GetChild(0).gameObject.SetActive(true);
+            mainCamera.transform.position = mainCamera.transform.position - new Vector3(400, 0, 0);
+            boy.transform.position = boy.transform.position - new Vector3(400, 0, 0);
         }
     }
 
+    public void LeftScene()
+    {
+        if (mainCamera.transform.position.x == 0)
+        {
+            mainCamera.transform.position = mainCamera.transform.position + new Vector3(400, 0, 0);
+            boy.transform.position = boy.transform.position + new Vector3(400, 0, 0);
+        }
+        else if (mainCamera.transform.position.x > 0)
+        {
+            mainCamera.transform.position = mainCamera.transform.position - new Vector3(100, 0, 0);
+            boy.transform.position = boy.transform.position - new Vector3(100, 0, 0);
+        }
+    }
 
 
 
