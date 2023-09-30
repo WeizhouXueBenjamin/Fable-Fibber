@@ -17,6 +17,7 @@ public class ScenesManager : MonoBehaviour
 
     public void Update() 
     {
+        mainCamera = Camera.main;
         //Debug.Log(currentScene);
         switch(mainCamera.transform.position.x)
         {
