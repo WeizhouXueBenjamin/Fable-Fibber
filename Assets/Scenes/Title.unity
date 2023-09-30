@@ -566,7 +566,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f69b0ab8359b1ab4f87a92f089507ce4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
+  mainCamera: {fileID: 0}
+  boy: {fileID: 0}
+  currentScene: 
+  camera: {fileID: 662885950}
+  backButton: {fileID: 0}
 --- !u!4 &1556959849
 Transform:
   m_ObjectHideFlags: 0

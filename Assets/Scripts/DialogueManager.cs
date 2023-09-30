@@ -16,6 +16,11 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueObject.SetActive(true);
         dialgoueText.text = intro1;
+        float scale = 0.1f;
+        // dialogueObject.transform.localScale = new Vector3(scale, scale, scale);
+        // RectTransform rectTransform = dialogueObject.GetComponent<RectTransform>();
+        // rectTransform.sizeDelta = new Vector3(scale, scale, scale);
+        
     }
 
     public void Intro2() { dialgoueText.text = intro2; }
