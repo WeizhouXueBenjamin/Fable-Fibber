@@ -3,8 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class DialogueLoader : MonoBehaviour
 {
-    public string targetSceneName; // Name of the scene to load
-    public DialogueTrigger dialogueTrigger; // Reference to the DialogueTrigger script
+    public DialogueTrigger dialogueTrigger;
 
     private void Start()
     {
