@@ -10,7 +10,6 @@ public class DialogueManager : MonoBehaviour
 
     public void Start()
     {
-        // Initialize dialogues here, e.g., load from a data structure.
         dialogues = new string[]
         {
             "You are a villager of a nearby town.",
@@ -19,15 +18,13 @@ public class DialogueManager : MonoBehaviour
             "Woods to the left. Town to the right."
         };
 
-        // Start displaying the first dialogue.
         ShowCurrentDialogue();
     }
 
     public void TriggerDialogue()
     {
-        // Display the next dialogue when triggered.
         currentDialogueIndex++;
-        // Check if there are more dialogues to show.
+
         if (currentDialogueIndex < dialogues.Length)
         {
             ShowCurrentDialogue();
@@ -35,7 +32,6 @@ public class DialogueManager : MonoBehaviour
         else
         {
             // No more dialogues, perform any closing action here.
-            // For example, close the dialogue box or end the conversation.
         }
     }
 
