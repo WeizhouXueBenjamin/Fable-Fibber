@@ -1,45 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class DialogueManager : MonoBehaviour
 {
     public Text dialogueMessage;
-    private Queue<string> sentences;
+    private string[] dialogues;
+    private int currentDialogueIndex = 0;
 
     public void Start()
     {
-        sentences = new Queue<string>();
-    }
-
-    public void StartDialogue(Dialogue dialogue)
-    {
-        Debug.Log("Starting conversation");
-        sentences.Clear();
-        foreach (string sentence in dialogue.sentences)
+        // Initialize dialogues here, e.g., load from a data structure.
+        dialogues = new string[]
         {
-            sentences.Enqueue(sentence);
-        }
+            "You are a villager of a nearby town.",
+            "You have a habit of causing trouble.",
+            "You've been given an allowance of 10 gold. It may come in handy later.",
+            "Woods to the left. Town to the right."
+        };
 
-        DisplayNextSentence();
+        // Start displaying the first dialogue.
+        ShowCurrentDialogue();
     }
 
-    public void DisplayNextSentence()
+    public void TriggerDialogue()
     {
-        if (sentences.Count == 0)
+        // Display the next dialogue when triggered.
+        currentDialogueIndex++;
+        // Check if there are more dialogues to show.
+        if (currentDialogueIndex < dialogues.Length)
         {
-            EndDialogue();
-            return;
+            ShowCurrentDialogue();
         }
-
-        string sentence = sentences.Dequeue();
-        dialogueMessage.text = sentence;
-        Debug.Log(sentence);
+        else
+        {
+            // No more dialogues, perform any closing action here.
+            // For example, close the dialogue box or end the conversation.
+        }
     }
 
-    public void EndDialogue()
+    private void ShowCurrentDialogue()
     {
-        Debug.Log("End of conversation");
+        dialogueMessage.text = dialogues[currentDialogueIndex];
     }
 }
